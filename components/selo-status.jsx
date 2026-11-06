@@ -7,12 +7,14 @@ const ITENS = {
 };
 
 export function SeloStatus({ status }) {
-  const item = ITENS[status] ?? { Icone: CircleDot, classe: "status-aberto" };
+  const conhecido = Object.hasOwn(ITENS, status);
+  const item = conhecido ? ITENS[status] : { Icone: CircleDot, classe: "status-aberto" };
+  const nome = conhecido ? status : String(status ?? "");
   const Icone = item.Icone;
   return (
     <span className={`selo-status ${item.classe}`}>
-      <Icone aria-hidden="true" className="selo-icone" />
-      <span>{status}</span>
+      <Icone className="selo-icone" role="img" aria-label={nome} />
+      <span aria-hidden="true">{nome}</span>
     </span>
   );
 }

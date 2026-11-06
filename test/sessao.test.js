@@ -1,5 +1,6 @@
 import { createHmac, randomBytes } from "node:crypto";
 import { beforeAll, describe, expect, it } from "vitest";
+import { obterSegredoSessao } from "../lib/segredo-sessao.js";
 import { criarTokenSessao, lerTokenSessao } from "../lib/token-sessao.js";
 
 beforeAll(() => {
@@ -37,5 +38,18 @@ describe("cookie de sessão", () => {
 
     expect(await lerTokenSessao(`${corpo}.${assinaturaAlheia}`)).toBeNull();
     expect(await lerTokenSessao(`${corpoTrocado}.${token.slice(token.lastIndexOf(".") + 1)}`)).toBeNull();
+  });
+
+  it("na publicação exige SESSAO_SEGREDO e não inventa outro", async () => {
+    const segredo = process.env.SESSAO_SEGREDO;
+    const ambiente = process.env.NODE_ENV;
+    delete process.env.SESSAO_SEGREDO;
+    process.env.NODE_ENV = "production";
+    try {
+      await expect(obterSegredoSessao()).rejects.toThrow(/SESSAO_SEGREDO/);
+    } finally {
+      process.env.SESSAO_SEGREDO = segredo;
+      process.env.NODE_ENV = ambiente;
+    }
   });
 });

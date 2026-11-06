@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { io } from "next/cache";
 import { FormularioEntrada } from "@/components/formulario-entrada";
+import { MensagemErro } from "@/components/mensagens";
 import Link from "next/link";
 import { lerSessao } from "@/lib/sessao";
 import { PAPEL } from "@/lib/status";
@@ -39,11 +40,7 @@ async function Inicio({ searchParams }) {
         {sessao.nome}, você está como{" "}
         {sessao.papel === PAPEL.ATENDENTE ? "quem atende o chamado" : "quem solicita o conserto"}.
       </p>
-      {erroInicial ? (
-        <p role="alert" className="mensagem-erro">
-          {erroInicial}
-        </p>
-      ) : null}
+      <MensagemErro id="erro-inicio">{erroInicial}</MensagemErro>
       <ul className="atalhos">
         <li>
           <Link href="/chamados/novo">Abrir um chamado</Link>

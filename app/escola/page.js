@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { io } from "next/cache";
 import Link from "next/link";
 import { FormularioEscola } from "@/components/formulario-escola";
-import { MensagemOk } from "@/components/mensagens";
+import { MensagemErro, MensagemOk } from "@/components/mensagens";
 import { obterEscola } from "@/lib/escola";
 import { lerSessao } from "@/lib/sessao";
 
@@ -27,9 +27,9 @@ async function Escola({ searchParams }) {
     return (
       <div className="pagina">
         <h1>Dados da escola</h1>
-        <p role="alert" className="mensagem-erro">
+        <MensagemErro id="erro-acesso-escola">
           Entre com seu nome e papel para preencher os dados da escola.
-        </p>
+        </MensagemErro>
         <p>
           <Link className="atalho" href="/">
             Ir para a entrada

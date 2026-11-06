@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { io } from "next/cache";
 import Link from "next/link";
 import { FormularioChamado } from "@/components/formulario-chamado";
+import { MensagemErro } from "@/components/mensagens";
 import { lerSessao } from "@/lib/sessao";
 
 export const metadata = {
@@ -23,9 +24,7 @@ async function Novo() {
     return (
       <div className="pagina">
         <h1>Abrir chamado</h1>
-        <p role="alert" className="mensagem-erro">
-          Entre com seu nome e papel para abrir um chamado.
-        </p>
+        <MensagemErro id="erro-novo">Entre com seu nome e papel para abrir um chamado.</MensagemErro>
         <p>
           <Link className="atalho" href="/">
             Ir para a entrada

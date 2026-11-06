@@ -2,10 +2,11 @@
 
 import { useActionState } from "react";
 import { entrar } from "@/app/acoes";
+import { useFocoNoErro } from "@/components/foco-erro";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MensagemErro } from "@/components/mensagens";
+import { descritoPorErro, MensagemErro } from "@/components/mensagens";
 import { NOME_DEMONSTRACAO } from "@/lib/status";
 
 const inicial = { erro: "", campo: "", nome: "" };
@@ -14,8 +15,9 @@ export function FormularioEntrada({ erroInicial = "" }) {
   const [estado, acao, enviando] = useActionState(entrar, inicial);
   const erro = estado.erro || erroInicial;
   const nome = estado.nome || "";
-  const erroNome = estado.campo === "nome";
-  const erroPapel = estado.campo === "papel" || erroInicial !== "";
+  const erroNome = Boolean(erro) && estado.campo === "nome";
+  const erroPapel = Boolean(erro) && estado.campo === "papel";
+  useFocoNoErro(erro, "erro-entrada", erroNome ? "nome" : estado.campo === "papel" ? "papel-solicitante" : "");
 
   return (
     <form action={acao} className="formulario" noValidate>
@@ -32,7 +34,8 @@ export function FormularioEntrada({ erroInicial = "" }) {
           autoComplete="name"
           defaultValue={nome}
           aria-invalid={erroNome || undefined}
-          aria-describedby={erro ? "erro-entrada ajuda-nome" : "ajuda-nome"}
+          aria-errormessage={erroNome ? "erro-entrada" : undefined}
+          aria-describedby={descritoPorErro(erro, "erro-entrada", "ajuda-nome", erroNome)}
           required
         />
         <p id="ajuda-nome" className="ajuda">
@@ -43,14 +46,30 @@ export function FormularioEntrada({ erroInicial = "" }) {
       <fieldset className="grupo-papel" aria-describedby={erroPapel ? "erro-entrada" : undefined}>
         <legend className="rotulo">Papel na escola</legend>
         <label className="opcao-papel" htmlFor="papel-solicitante">
-          <input id="papel-solicitante" type="radio" name="papel" value="solicitante" />
+          <input
+            id="papel-solicitante"
+            type="radio"
+            name="papel"
+            value="solicitante"
+            aria-invalid={erroPapel || undefined}
+            aria-errormessage={erroPapel ? "erro-entrada" : undefined}
+            aria-describedby={erroPapel ? "erro-entrada" : undefined}
+          />
           <span>
             <strong>Solicita o conserto</strong>
             <span>Abre o chamado e consulta o que pediu.</span>
           </span>
         </label>
         <label className="opcao-papel" htmlFor="papel-atendente">
-          <input id="papel-atendente" type="radio" name="papel" value="atendente" />
+          <input
+            id="papel-atendente"
+            type="radio"
+            name="papel"
+            value="atendente"
+            aria-invalid={erroPapel || undefined}
+            aria-errormessage={erroPapel ? "erro-entrada" : undefined}
+            aria-describedby={erroPapel ? "erro-entrada" : undefined}
+          />
           <span>
             <strong>Atende o chamado</strong>
             <span>Vê a lista da direção e muda o status.</span>

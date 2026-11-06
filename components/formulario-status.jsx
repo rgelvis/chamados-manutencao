@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { mudarStatus } from "@/app/acoes";
-import { MensagemErro } from "@/components/mensagens";
+import { useFocoNoErro } from "@/components/foco-erro";
+import { descritoPorErro, MensagemErro } from "@/components/mensagens";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +19,10 @@ export function FormularioStatus({ id, statusAtual }) {
   const [estado, acao, enviando] = useActionState(mudarStatus, { erro: "", campo: "" });
   const ajudaId = `ajuda-status-${id}`;
   const erroId = `erro-status-${id}`;
+  const invalidoStatus = Boolean(estado.erro) && estado.campo === "status";
+  const invalidoTexto = Boolean(estado.erro) && estado.campo === "texto";
+  const idCampo = invalidoStatus ? `status-${id}` : invalidoTexto ? `texto-${id}` : "";
+  useFocoNoErro(estado.erro, erroId, idCampo);
 
   return (
     <form action={acao} className="formulario formulario-status" noValidate>
@@ -36,8 +41,9 @@ export function FormularioStatus({ id, statusAtual }) {
           name="status"
           className="campo"
           defaultValue={proximoStatus(statusAtual)}
-          aria-invalid={estado.campo === "status" || undefined}
-          aria-describedby={estado.erro ? `${erroId} ${ajudaId}` : ajudaId}
+          aria-invalid={invalidoStatus || undefined}
+          aria-errormessage={invalidoStatus ? erroId : undefined}
+          aria-describedby={descritoPorErro(estado.erro, erroId, ajudaId, invalidoStatus)}
         >
           {LISTA_STATUS.map((status) => (
             <option key={status} value={status}>
@@ -55,8 +61,9 @@ export function FormularioStatus({ id, statusAtual }) {
           id={`texto-${id}`}
           name="texto"
           className="campo"
-          aria-invalid={estado.campo === "texto" || undefined}
-          aria-describedby={estado.erro ? `${erroId} ${ajudaId}` : ajudaId}
+          aria-invalid={invalidoTexto || undefined}
+          aria-errormessage={invalidoTexto ? erroId : undefined}
+          aria-describedby={descritoPorErro(estado.erro, erroId, ajudaId, invalidoTexto)}
         />
       </div>
 

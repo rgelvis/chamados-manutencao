@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useActionState } from "react";
 import { buscarEndereco, salvarDadosEscola } from "@/app/acoes";
-import { MensagemErro, MensagemOk } from "@/components/mensagens";
+import { useFocoNoErro } from "@/components/foco-erro";
+import { descritoPorErro, MensagemErro, MensagemOk } from "@/components/mensagens";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,18 @@ export function FormularioEscola({ escola }) {
   }
 
   const erro = estado.erro || erroBusca;
+  const campoErro = erroBusca ? "cep" : estado.campo;
+  const idsCampo = { nome: "nome-escola", cep: "cep", uf: "uf" };
+  useFocoNoErro(erro, "erro-escola", idsCampo[campoErro] ?? "");
+
+  function ligarCampo(campo, idAjuda) {
+    const invalido = Boolean(erro) && campoErro === campo;
+    return {
+      "aria-invalid": invalido || undefined,
+      "aria-errormessage": invalido ? "erro-escola" : undefined,
+      "aria-describedby": descritoPorErro(erro, "erro-escola", idAjuda, invalido),
+    };
+  }
 
   return (
     <form action={acao} className="formulario" noValidate>
@@ -58,8 +71,7 @@ export function FormularioEscola({ escola }) {
           value={nome}
           onChange={(evento) => setNome(evento.target.value)}
           autoComplete="organization"
-          aria-invalid={estado.campo === "nome" || undefined}
-          aria-describedby="ajuda-nome-escola"
+          {...ligarCampo("nome", "ajuda-nome-escola")}
         />
         <p id="ajuda-nome-escola" className="ajuda">
           Começa em branco de propósito. Preencha quando o nome estiver definido. A consulta de CEP
@@ -79,8 +91,7 @@ export function FormularioEscola({ escola }) {
           autoComplete="postal-code"
           value={cep}
           onChange={(evento) => setCep(evento.target.value)}
-          aria-invalid={estado.campo === "cep" || erroBusca ? true : undefined}
-          aria-describedby={erro ? "erro-escola ajuda-cep" : "ajuda-cep"}
+          {...ligarCampo("cep", "ajuda-cep")}
         />
         <p id="ajuda-cep" className="ajuda">
           A busca usa a ViaCEP e preenche logradouro e município. Você pode corrigir os campos antes
@@ -108,7 +119,6 @@ export function FormularioEscola({ escola }) {
           value={logradouro}
           onChange={(evento) => setLogradouro(evento.target.value)}
           autoComplete="address-line1"
-          aria-describedby="erro-escola"
         />
       </div>
 
@@ -152,8 +162,7 @@ export function FormularioEscola({ escola }) {
             onChange={(evento) => setUf(evento.target.value)}
             autoComplete="address-level1"
             maxLength={2}
-            aria-invalid={estado.campo === "uf" || undefined}
-            aria-describedby={estado.campo === "uf" ? "erro-escola" : undefined}
+            {...ligarCampo("uf")}
           />
         </div>
       </div>

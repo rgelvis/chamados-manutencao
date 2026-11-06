@@ -10,6 +10,13 @@ const fonte = Atkinson_Hyperlegible({
   display: "swap",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export const metadata = {
   title: {
     default: "Chamados de manutenção",

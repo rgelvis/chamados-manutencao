@@ -136,12 +136,14 @@ body {
   font-size: 1.125rem;
   line-height: 1.55;
   text-wrap: pretty;
+  overflow-wrap: break-word;
 }
 
-:focus-visible {
+:focus-visible,
+.mensagem-erro:focus {
   outline: 3px solid #ffbf47 !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 0 2px #1c1915;
+  box-shadow: 0 0 0 2px #1c1915 !important;
 }
 
 .pular {
@@ -224,7 +226,7 @@ body {
   display: inline-flex;
   align-items: center;
   min-height: 3rem;
-  padding-inline: 0.15rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .topo a {
@@ -239,9 +241,21 @@ body {
   min-width: min(100%, 18rem);
 }
 
+.pagina,
+.formulario,
+.campo-grupo,
+.lista,
+.cartao,
+.grupo-papel {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .pagina {
   padding-block: 1.75rem 3rem;
-  overflow: visible;
 }
 
 .pagina h1,
@@ -277,7 +291,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  overflow: visible;
 }
 
 .campo-grupo {
@@ -313,6 +326,9 @@ textarea.campo {
   background: #fffdf8 !important;
   color: #1c1915 !important;
   border-radius: 0.5rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 textarea.campo {
@@ -322,9 +338,11 @@ textarea.campo {
 .botao {
   min-height: 3rem !important;
   height: auto !important;
+  max-width: 100%;
   padding: 0.75rem 1.15rem !important;
   font-size: 1.0625rem !important;
   white-space: normal !important;
+  overflow-wrap: anywhere;
 }
 
 .botao-sair {
@@ -354,11 +372,25 @@ textarea.campo {
   cursor: pointer;
 }
 
+.opcao-papel:focus-within {
+  outline: 3px solid #ffbf47 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 2px #1c1915 !important;
+}
+
 .opcao-papel input {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
   margin-top: 0.2rem;
   accent-color: #0e3b36;
+  flex: 0 0 auto;
+}
+
+.opcao-papel input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .opcao-papel span {
@@ -420,7 +452,6 @@ textarea.campo {
 .cartao {
   background: #fffdf8;
   border: 2px solid #1c1915;
-  overflow: visible;
 }
 
 .linha-titulo {

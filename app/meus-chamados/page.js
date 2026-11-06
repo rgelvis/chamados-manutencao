@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { io } from "next/cache";
 import Link from "next/link";
 import { CartaoChamado } from "@/components/cartao-chamado";
-import { MensagemOk } from "@/components/mensagens";
+import { MensagemErro, MensagemOk } from "@/components/mensagens";
 import { garantirDemonstracao } from "@/lib/demonstracao";
 import { listarPorSolicitante } from "@/lib/chamados";
 import { lerSessao } from "@/lib/sessao";
@@ -29,9 +29,9 @@ async function Consulta({ searchParams }) {
     return (
       <div className="pagina">
         <h1>Meus chamados</h1>
-        <p role="alert" className="mensagem-erro">
+        <MensagemErro id="erro-meus">
           Entre com seu nome e papel para consultar o que você pediu.
-        </p>
+        </MensagemErro>
         <p>
           <Link className="atalho" href="/">
             Ir para a entrada
